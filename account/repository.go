@@ -1,7 +1,9 @@
 /*
-   package account
-   repository.go
-   - database operation (CRUD) for account package. its the heart of the apps
+    package account
+    repository.go
+        database operation (CRUD) for account package. 
+        repository/ datastore layer is the bridge that establish communication
+        between application and database server
 */
 package account
 
@@ -14,13 +16,22 @@ import (
 
 // PgxIface is pgx interface
 type PgxIface interface {
+    // using pgxconn interface
+	// Begin(context.Context) (pgx.Tx, error)
+	// Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+	// QueryRow(context.Context, string, ...interface{}) pgx.Row
+	// Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+	// Ping(context.Context) error
+	// Prepare(context.Context, string, string) (*pgconn.StatementDescription, error)
+	// Close(context.Context) error
+
+    // using pgxpool interface
 	Begin(context.Context) (pgx.Tx, error)
 	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
 	QueryRow(context.Context, string, ...interface{}) pgx.Row
 	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
 	Ping(context.Context) error
-	Prepare(context.Context, string, string) (*pgconn.StatementDescription, error)
-	Close(context.Context) error
+	Close()
 }
 
 // Database is wrapper for PgxIface
@@ -36,13 +47,13 @@ func NewDatabase(ds PgxIface) Database {
 // Create method will insert new record to database. 'C' part of the CRUD
 func (pool Database) Create(user User) (*User, error) {
     // sql for inserting new record
-    q := `INSERT INTO users (id,firstname,lastname,email,passkey)
-          VALUES ($1,$2,$3,$4,$5) RETURNING id,firstname,lastname,email,passkey`
+    q := `INSERT INTO users (firstname,lastname,email,passkey)
+          VALUES ($1,$2,$3,$4) RETURNING id,firstname,lastname,email,passkey`
 
     // execute query to insert new record. it takes 'user' variable as its input
     // the result will be placed in 'row' variable
     row := pool.DB.QueryRow(context.Background(), q, 
-        user.ID, user.Firstname, user.Lastname, user.Email, user.PassKey)
+        user.Firstname, user.Lastname, user.Email, user.PassKey)
 
     // create 'u' variable as 'User' type to contain scanned data value from 'row' variable
     u := new(User)

@@ -6,7 +6,6 @@
 package account
 
 import (
-	"context"
 	"errors"
 	"regexp"
 	"testing"
@@ -31,13 +30,13 @@ var (
 )
 
 // Run will prepare our pgxmock connection interface
-func Run(t *testing.T) pgxmock.PgxConnIface{
+func Run(t *testing.T) pgxmock.PgxPoolIface{
     t.Helper()
-    mock, err := pgxmock.NewConn()
+    mock, err := pgxmock.NewPool()
     if err != nil {
         t.Errorf("unexpected error occur: %v\n", err)
     }
-    defer mock.Close(context.Background())
+    defer mock.Close()
 
     return mock
 }
@@ -45,13 +44,13 @@ func Run(t *testing.T) pgxmock.PgxConnIface{
 // TestCreate will test our Create user method
 func TestCreate(t *testing.T) {
     mock := Run(t)
-    q := `INSERT INTO users (id,firstname,lastname,email,passkey) 
-          VALUES ($1,$2,$3,$4,$5) RETURNING id,firstname,lastname,email,passkey`
+    q := `INSERT INTO users (firstname,lastname,email,passkey) 
+          VALUES ($1,$2,$3,$4) RETURNING id,firstname,lastname,email,passkey`
     
     // Success
     t.Run("SUCCESS", func(t *testing.T){
         mock.ExpectQuery(regexp.QuoteMeta(q)).
-            WithArgs(want.ID,want.Firstname,want.Lastname,want.Email,want.PassKey).
+            WithArgs(want.Firstname,want.Lastname,want.Email,want.PassKey).
             WillReturnRows(mock.NewRows(colums).
                 AddRow(want.ID,want.Firstname,want.Lastname,want.Email,want.PassKey))
 
