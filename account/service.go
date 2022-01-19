@@ -1,3 +1,8 @@
+/*
+    package account
+    service.go
+        service layer for account package. the business logic of the application
+*/
 package account
 
 // Interface to Account service
@@ -19,6 +24,7 @@ func NewAccountService(db Database) *accountService{
     return &accountService{db: db}
 }
 
+// Create method will send create record request to datastore/ repository
 func (s *accountService) Create(user User) (*UserResponse, error) {
     // call Create from repository/ datasstore
     u, err := s.db.Create(user)
@@ -45,6 +51,7 @@ func (s *accountService) Get(id int) (*UserResponse, error) {
     return UserToUserResponse(*user), nil 
 }
 
+// Gets method will get all user record from repository/ datastore
 func (s *accountService) Gets() ([]*UserResponse, error) {
     // Call Gets from repository/ datastore to retreive all User record
     users, err := s.db.Gets()
@@ -64,6 +71,40 @@ func (s *accountService) Gets() ([]*UserResponse, error) {
     return uRes, nil
 }
 
+// Update will send update request to datastore/ repository
+func (s *accountService) Update(id int, user User) (*UserResponse, error) {
+    // check if user data is valid
+    // field 'firstname', 'email', and 'passkey' is required
+    if err := user.IsValid(); err != nil {
+        return nil, err
+    }
+
+    // call Update method from repository/ datastore to update certain record
+    u, err := s.db.Update(id, user)
+
+    // return nil and the error if error occur
+    if err != nil {
+        return nil, err
+    }
+
+    // return user response dto and nil for the error
+    return UserToUserResponse(*u), nil
+}
+
+// Delete method will send request to delete record to datastore/ repository
+// based on user 'id'
+func (s *accountService) Delete(id int) (*UserResponse, error) {
+    // call Delete method from repository/ datastore
+    u, err := s.db.Delete(id)
+
+    // check if error occur while executing Delete method
+    if err != nil {
+        return nil, err
+    }
+
+    // return user response dto and nil if no error found
+    return UserToUserResponse(*u), nil
+}
 
 // UserResponse is to response the client/request with 'user' data
 type UserResponse struct {
