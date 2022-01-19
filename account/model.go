@@ -1,3 +1,8 @@
+/*
+    package account
+    model.go 
+        database table representation object model/ object wrapper
+*/
 package account
 
 import (
