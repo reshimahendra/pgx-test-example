@@ -37,7 +37,81 @@ make test-cover
   <img src="test-browser.png" />
 </p>
 
+Or if you already have the `proof.out` file from previous generated test, and you want to see the coverage profile on browser, run:
 
+```bash
+make show-test-cover
+```
+### Running Local Server
+
+```bash
+make run
+```
+
+
+#### Playing with api operation (using `curl`):
+
+```bash
+# POST/ create new user data
+
+curl http://127.0.0.1:8000/v1/account/ -X POST -H 'content-type: application/json' \
+--data '{"firstname":"john","lastname":"doe","email":"john@doe.com","passkey":"secret"}'
+# Server response
+# {"id":1,"first_name":"john","last_name":"doe","email":"john@doe.com"}
+
+curl http://127.0.0.1:8000/v1/account/ -X POST -H 'content-type: application/json' \
+--data '{"firstname":"janne","lastname":"doe","email":"janne@doe.com","passkey":"secret"}'
+# Server response
+# {"id":2,"first_name":"janne","last_name":"doe","email":"janne@doe.com"}
+
+curl http://127.0.0.1:8000/v1/account/ -X POST -H 'content-type: application/json' \
+--data '{"firstname":"donny","lastname":"trumpy","email":"donny@trumpy.com","passkey":"secret"}'
+# Server response
+# {"id":3,"firstname":"donny","lastname":"trumpy","email":"donny@trumpy.com"}
+```
+
+```bash
+# UPDATE DATA
+
+curl http://127.0.0.1:8000/v1/account/2 -X PUT -H 'content-type: application/json' \
+--data '{"id":2,"firstname":"janne","lastname":"sweety","email":"janne@doe.com","passkey":"secret"}'
+# Server response
+# {"id":2,"firstname":"janne","lastname":"sweety","email":"janne@doe.com"}
+```
+
+
+```bash
+# GET DATA by ID
+
+curl http://127.0.0.1:8000/v1/account/2
+# Server response
+# {"id":2,"first_name":"janne","last_name":"sweety","email":"janne@doe.com"}
+
+curl http://127.0.0.1:8000/v1/account/1                                                
+# Server response
+# {"id":1,"first_name":"john","last_name":"doe","email":"john@doe.com"}
+
+
+# GET ALL DATA
+
+curl http://127.0.0.1:8000/v1/account/                                                 
+# Server response
+#[{"id":1,"first_name":"john","last_name":"doe","email":"john@doe.com"},{"id":2,"first_name":"janne","last_name":"sweety","email":"janne@doe.com"},{"id":3,"firstname":"donny","lastname":"trumpy","email":"donny@trumpy.com"}]
+```
+
+
+```bash
+# DELETE DATA
+
+curl http://127.0.0.1:8000/v1/account/1 -X DELETE
+# Server response
+# {"id":1,"first_name":"john","last_name":"doe","email":"john@doe.com"}
+```
+### Build Application
+
+```bash
+make build
+```
 
 ## LICENSE
 [MIT](https://github.com/reshimahendra/gin-starter/blob/main/LICENSE)
