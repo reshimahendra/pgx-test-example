@@ -51,7 +51,11 @@ func Run() {
     // account app group api endpoint : http://domainname.com/v1/account
     accRouter := v1.Group("/account")
     accRouter.POST("/", accAPI.UserCreateHandler)
+    accRouter.PUT("/:id", accAPI.UserUpdateHandler)
+    accRouter.DELETE("/:id", accAPI.UserDeleteHandler)
     accRouter.GET("/:id", accAPI.UserGetHandler)
+    accRouter.GET("/", accAPI.UserGetsHandler)
 
-    r.Run(":8000")
+    // run the server
+    log.Fatalf("%v", r.Run(":8000"))
 }
