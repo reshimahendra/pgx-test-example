@@ -48,8 +48,21 @@ make show-test-cover
 make run
 ```
 
+The local server will be running on `http://127.0.0.1:8000`
+Available api endpoint for the local server:
+
+| No | Method | Endpoint | Description |
+|----|--------|----------|-------------|
+| 1 | `POST` | `/v1/account/` | Create/ insert new user data |
+| 2 | `GET`  | `/v1/account/:id` | Get data by `ID` |
+| 3 | `GET` | `/v1/account/` | Get all user data |
+| 4 | `PUT` | `/v1/account/:id` | Update user data based on its `ID` |
+| 5 | `DELETE` | `/v1/account/:id` | Delete user data based on its `ID` |
+
+---
 
 #### Playing with api operation (using `curl`):
+
 
 ```bash
 # POST/ create new user data
