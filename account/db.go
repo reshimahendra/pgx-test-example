@@ -15,7 +15,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-// Database is configuration wrapper for our database setting
+// DatabaseConfig is configuration wrapper for our database setting
 type DatabaseConfig struct {
     Username string
     Password string
